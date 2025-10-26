@@ -1,0 +1,20 @@
+#Idea from https://forum.mikrotik.com/t/script-for-auto-update/182064
+
+:global UpdateChannel "stable";
+#:global UpdateChannel "long-term";
+system package update set channel=$UpdateChannel 
+
+:local CheckUpdate [/system package update check-for-updates as-value];
+#:local Channel ($CheckUpdate -> "channel");
+:local InstalledVersion ($CheckUpdate -> "installed-version");
+:local LatestVersion ($CheckUpdate -> "latest-version");
+
+:if ($InstalledVersion = $LatestVersion) do={
+    :log info "The router already has the latest firmware v.$InstalledVersion";
+} else={
+   :log warn "The router firnware update from v.$InstalledVersion to new v.$LatestVersion";
+    /system package update install
+    :delay 10
+   :log warn "The router rebooting";
+    /system reboot
+}
