@@ -2,6 +2,8 @@
 
 :global UpdateChannel "stable";
 #:global UpdateChannel "long-term";
+#:global UpdateChannel "testing";
+#:global UpdateChannel "development";
 system package update set channel=$UpdateChannel 
 
 :local CheckUpdate [/system package update check-for-updates as-value];
